@@ -1,0 +1,36 @@
+services:
+  postgresdb:
+    image: postgres:16.3
+    container_name: postgresdb
+    ports:
+      - 5432:5432
+    networks:
+      - guests-network
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES: postgres
+      POSTGRES_DB: guests
+  pgadmin4:
+    image: dpage/pgadmin4:8.9
+    container_name: pgadmin
+    ports:
+      - "15432:80"
+    networks:
+      - guests-network
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+  guest-spring-security-jwt:
+    image: guest-spring-security-jwt
+    container_name: guest-spring-security-jwt
+    ports:
+      - "8080:8080"
+    networks:
+      - guests-network
+networks:
+  guests-network:
+    driver: bridge
+volumes:
+  pgadmin-data:
